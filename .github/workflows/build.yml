@@ -2,14 +2,16 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "test" ]
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
-      image: ghcr.io/vanilla-os/pico:dev
+      image: ghcr.io/vanilla-arm/pico:dev
       volumes:
         - /proc:/proc
         - /:/run/host
@@ -113,9 +115,7 @@ jobs:
             /__w/gnome-control-center/gnome-control-center.tar.xz
 
     - uses: softprops/action-gh-release@v2
-      if: github.ref == 'refs/heads/main'
       with:
-        token: "${{ secrets.GITHUB_TOKEN }}"
         tag_name: "continuous"
         prerelease: true
         name: "Continuous Build"
